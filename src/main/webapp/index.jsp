@@ -9,20 +9,26 @@
 <%@page import="uk.ac.dundee.computing.aec.instagrim.stores.*" %>
 <!DOCTYPE html>
 <html>
+   
     <head>
-        <title>Instagrim</title>
+        <title >Instagrim</title>
         <link rel="stylesheet" type="text/css" href="Styles.css" />
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
         <header>
-            <h1>InstaGrim ! </h1>
-            <h2>Your world in Black and White</h2>
+            <h1 id="mainTitle" align="center" >InstaGrim !</h1>
+            <h2 align="center" >Your world in Black and White</h2>
         </header>
+        
+        <div id="grimReaper">
+            <img src="E:\NetBeans IDE\InstaGrim For AC\srcchibi_grim_reaper_by_tarasf-d6bkvkq" 
+                 alt="Grim Admin" width="50px" height="50px">
+        </div>
         <nav>
+            <div id="sideMenu" >
             <ul>
 
-               
                 <li><a href="upload.jsp">Upload</a></li>
                     <%
                         
@@ -33,9 +39,11 @@
                     %>
 
                 <li><a href="/Instagrim/Images/<%=lg.getUsername()%>">Your Images</a></li>
+                <li> <a href="LogoutServlet">Log Out</a></li>
                     <%}
                             }else{
                                 %>
+                
                  <li><a href="register.jsp">Register</a></li>
                 <li><a href="login.jsp">Login</a></li>
                 <%
@@ -44,6 +52,7 @@
                     }%>
             </ul>
         </nav>
+            </div>
         <footer>
             <ul>
                 <li class="footer"><a href="/Instagrim">Home</a></li>
