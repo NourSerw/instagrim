@@ -8,9 +8,23 @@ and open the template in the editor.
     Author     : Administrator
 */
 
-
+body {
+    background-color: #d3d3d3;
+}
 nav {
     text-align: left;
     border: 2px;
     float: right;
+}
+
+
+#footer{
+    bottom: 10px;
+}
+
+#grimReaper{
+    border: 5px solid #000000;
+    width: 400px;
+    height:400px;
+    margin-left:460px;
 }
