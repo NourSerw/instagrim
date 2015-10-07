@@ -26,13 +26,16 @@
        
         <article>
             <h3>Register as user</h3>
+            
             <form method="POST"  action="Register">
                 <ul>
                     <li>User Name <input type="text" name="username"></li>
-                    <li>Password <input type="password" name="password"></li>
+                    <li>Password  <input type="password" name="password"></li>
+                    <li>Confirm Password <input type="password" name="password01"></li>
+                    
                 </ul>
                 <br/>
-                <input type="submit" value="Regidter"> 
+                <input type="submit" value="Register"> 
             </form>
 
         </article>
