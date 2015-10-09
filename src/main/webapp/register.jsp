@@ -29,9 +29,14 @@
             
             <form method="POST"  action="Register">
                 <ul>
+                    <p> ${message}</p>
                     <li>User Name <input type="text" name="username"></li>
                     <li>Password  <input type="password" name="password"></li>
                     <li>Confirm Password <input type="password" name="password01"></li>
+                    <li>Address <input type="=text" name="address"</li>
+                    <li>First Name <input type="text" name="fName"</li>
+                    <li>Last Name <input type="text" name="lName"</li>
+                    <li>E-mail <input type="text" name="email"</li>
                     
                 </ul>
                 <br/>

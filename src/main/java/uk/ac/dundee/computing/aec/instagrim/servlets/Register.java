@@ -9,6 +9,8 @@ package uk.ac.dundee.computing.aec.instagrim.servlets;
 import com.datastax.driver.core.Cluster;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -48,21 +50,45 @@ public class Register extends HttpServlet {
         String username=request.getParameter("username");
         String password=request.getParameter("password");
         String password01 = request.getParameter("password01"); 
+        String address = request.getParameter("address");
+        String firstName = request.getParameter("fName");
+        String lastName = request.getParameter("lName");
+        String email = request.getParameter("email");
         
-        if(password.equals(password01))
+        
+        Pattern p0 = Pattern.compile(".+@.+\\.[a-z]+");
+        Matcher m0 = p0.matcher(email);
+        boolean emailVerify = m0.matches();
+        
+        
+        if(password.equals(password01) && emailVerify == true)
         {
         User us=new User();
         us.setCluster(cluster);
-        us.RegisterUser(username, password);
+        us.RegisterUser(username, password,address,firstName,lastName,email);
         
 	response.sendRedirect("/Instagrim");
+        } 
+           else if(!password.equals(password01) && emailVerify == true)
+        {
+            String message = "The passwords do not macth!";
+            request.setAttribute("message",message);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            response.sendRedirect("/register.jsp");
+
+        } else if(emailVerify == false && password.equals(password01))
+        {
+            String message = "Incorrect Email!";
+            request.setAttribute("message",message);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            response.sendRedirect("/register.jsp");
+           
         }
-        
         else {
-            
-            request.getRequestDispatcher("register.jsp").include(request, response);
-        }
-        
+            String message =" Password does not match and incorrect email!";
+            request.setAttribute("message", message);
+            request.getRequestDispatcher("/register.jsp").forward(request, response);
+            response.sendRedirect("/register.jsp");
         }
        
         
