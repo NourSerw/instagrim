@@ -51,6 +51,12 @@ public final class Keyspaces {
                     + "      userID uuid,\n"
                     +"       PRIMARY KEY(userID)"
                     + " );";
+            String usersHistory = "CREATE TABLE if not exists instagrim.userHistory (\n"
+                    + "      relID text,\n"
+                    + "      follower text,\n"
+                    + "      follwed text,\n"
+                    + "      PRIMARY KEY(relID)"
+                    + ");";
             Session session = c.connect();
             try {
                 PreparedStatement statement = session
@@ -66,6 +72,14 @@ public final class Keyspaces {
 
             //now add some column families 
             System.out.println("" + CreatePicTable);
+            
+            try {
+                SimpleStatement cqlQuery = new SimpleStatement(usersHistory);
+                session.execute(cqlQuery);
+            } catch (Exception et) {
+                System.out.println("Can't create following table " + et);
+            }
+            System.out.println("" + usersHistory);
 
             try {
                 SimpleStatement cqlQuery = new SimpleStatement(CreatePicTable);
