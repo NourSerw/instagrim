@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import uk.ac.dundee.computing.aec.instagrim.lib.CassandraHosts;
+import uk.ac.dundee.computing.aec.instagrim.lib.Convertors;
 import uk.ac.dundee.computing.aec.instagrim.models.User;
 
 /**
@@ -28,6 +29,7 @@ import uk.ac.dundee.computing.aec.instagrim.models.User;
 @WebServlet(name = "Register", urlPatterns = {"/Register"})
 public class Register extends HttpServlet {
     Cluster cluster=null;
+    
     public void init(ServletConfig config) throws ServletException {
         // TODO Auto-generated method stub
         cluster = CassandraHosts.getCluster();
@@ -55,6 +57,8 @@ public class Register extends HttpServlet {
         String lastName = request.getParameter("lName");
         String email = request.getParameter("email");
         
+        Convertors convertor = new Convertors();
+        java.util.UUID picid = convertor.getTimeUUID();
         
         Pattern p0 = Pattern.compile(".+@.+\\.[a-z]+");
         Matcher m0 = p0.matcher(email);
@@ -65,7 +69,7 @@ public class Register extends HttpServlet {
         {
         User us=new User();
         us.setCluster(cluster);
-        us.RegisterUser(username, password,address,firstName,lastName,email);
+        us.RegisterUser(picid, username, password,address,firstName,lastName,email);
         
 	response.sendRedirect("/Instagrim");
         } 

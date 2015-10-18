@@ -7,18 +7,22 @@ package uk.ac.dundee.computing.aec.instagrim.servlets;
 
 import java.io.IOException;  
 import java.io.PrintWriter;  
+import javax.servlet.RequestDispatcher;
   
 import javax.servlet.ServletException;  
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;  
 import javax.servlet.http.HttpServletRequest;  
 import javax.servlet.http.HttpServletResponse;  
 import javax.servlet.http.HttpSession;    
+import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 
 
 /**
  *
  * @author NSERW
  */
+@WebServlet(name = "LogOut", urlPatterns = {"/LogOut"})
 public class LogoutServlet extends HttpServlet {
 
     /**
@@ -30,37 +34,29 @@ public class LogoutServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet LogoutServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet LogoutServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
+   
     
     @Override
      protected void doGet(HttpServletRequest request, HttpServletResponse response)  
                                 throws ServletException, IOException {  
-            response.setContentType("text/html");  
-            PrintWriter out=response.getWriter();  
+            //response.setContentType("text/html");  
+            //PrintWriter out=response.getWriter();  
               
-            request.getRequestDispatcher("LogoutServlet.jsp").include(request, response);  
+           // request.getRequestDispatcher("index.jsp").include(request, response);  
+            
+            //LoggedIn lg= new LoggedIn();
+            //lg.setLogedout();
+            //String emptyName = null;
+            //lg.setUsername(emptyName);
               
             HttpSession session=request.getSession();  
-            session.invalidate();  
+            session.setAttribute("LoggedIn", null);
+            response.sendRedirect("/Instagrim");
+            //session.invalidate();  
               
-            out.print("You are successfully logged out!");  
+            //out.print("You are successfully logged out!");  
               
-            out.close();  
+            //out.close();  
     }  
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -82,10 +78,7 @@ public class LogoutServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        processRequest(request, response);
+    
     }
 
     /**
@@ -93,9 +86,6 @@ public class LogoutServlet extends HttpServlet {
      *
      * @return a String containing servlet description
      */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
+    
 
-}
+
