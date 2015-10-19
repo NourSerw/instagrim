@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import uk.ac.dundee.computing.aec.instagrim.lib.CassandraHosts;
 import uk.ac.dundee.computing.aec.instagrim.models.User;
 import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
+import uk.ac.dundee.computing.aec.instagrim.stores.Profile;
 
 /**
  *
@@ -50,7 +51,7 @@ public class Login extends HttpServlet {
         
         String username=request.getParameter("username");
         String password=request.getParameter("password");
-        
+        Profile p = new Profile();
         User us=new User();
         us.setCluster(cluster);
         boolean isValid=us.IsValidUser(username, password);
@@ -60,10 +61,10 @@ public class Login extends HttpServlet {
             LoggedIn lg= new LoggedIn();
             lg.setLogedin();
             lg.setUsername(username);
-            //request.setAttribute("LoggedIn", lg);
-            
+            us.getProfile(us, p);
             
             session.setAttribute("LoggedIn", lg);
+            session.setAttribute("Profile", p);
             System.out.println("Session in servlet "+session);
             RequestDispatcher rd=request.getRequestDispatcher("index.jsp");
 	    rd.forward(request,response);

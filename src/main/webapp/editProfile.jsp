@@ -1,9 +1,13 @@
 <%-- 
-    Document   : editProfil
+    Document   : editProfile
     Created on : Oct 11, 2015, 1:02:03 PM
     Author     : NSERW
 --%>
 
+
+<%@page import="uk.ac.dundee.computing.aec.instagrim.stores.Profile"%>
+<%@page import="uk.ac.dundee.computing.aec.instagrim.models.User"%>
+<%@page import="uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn"%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -15,19 +19,36 @@
     </head>
     <body>
         <h1>You can edit your profile here!</h1>
-        <p> Your profile name is: ${message}</p>
+    
         
-        <% ProfileClass pc = (ProfileClass)session.getAttribute("ProfileClass");  %>
-        <form method="POST"  action="Update">
+        <%   Profile pc = (Profile)session.getAttribute("Profile"); 
+             LoggedIn lg = (LoggedIn)session.getAttribute("LoggedIn");
+             User user = new User();
+             if(lg!=null){
+             String UserName = lg.getUsername();
+             String address = pc.getAddress();
+             String firstName = pc.getFName();
+             String lastName = pc.getLName();
+             String email = pc.getEmail();
+             
+             if(lg.getlogedin()) {
+             
+        %>
+        <form method="POST"  action="editProfile">
         <ul>
-            <li>User Name <input type="text" name="newUsername" ></li>
-            <li>Address <input type="=text" name="newAddress"</li>
-            <li>First Name <input type="text" name="newFName" value="<%=pc.getFName()%>"</li>
-            <li>Last Name <input type="text" name="newLname" value="<%=pc.setSName()%>"</li>
-            <li>E-mail <input type="text" name="newEmail" value="<%=pc.getEmail()%>"</li>
+            <li>User Name <input type="text" name="newUsername" value="<%=UserName%>"></li>
+            <li>Address <input type="text" name="newAddress" value="<%=address%>"</li>
+            <li>First Name <input type="" name="newFName" value="<%=firstName%>"</li>
+            <li>Last Name <input type="text" name="newLname" value="<%=lastName%>"</li>
+            <li>E-mail <input type="text" name="newEmail" value="<%=email%>"</li>
             <br>
             <input type="submit" value="Edit">
         </ul>
         </form>
+            <% } 
+            
+             }else {
+            }
+            %>
     </body>
 </html>

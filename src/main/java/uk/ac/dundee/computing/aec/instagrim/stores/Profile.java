@@ -9,16 +9,20 @@ package uk.ac.dundee.computing.aec.instagrim.stores;
  *
  * @author NSERW
  */
-public class ProfileClass {
+public class Profile {
     
     String fName = null;
-    String sName = null;
+    String lName = null;
     String address = null;
     String email = null;
     
+    public Profile()
+    {
+    }
+    
     public void setFName(String fName01)
     {
-            this.fName = fName01;
+        this.fName = fName01;
     }
     
     public String getFName()
@@ -26,14 +30,14 @@ public class ProfileClass {
         return fName;
     }
     
-    public void setSName(String sName01)
+    public void setLName(String lName01)
     {
-        this.sName = sName01;
+        this.lName = lName01;
     }
     
-    public String getSName()
+    public String getLName()
     {
-        return sName;
+        return lName;
     }
     
     public void setAddress(String address01)
@@ -55,4 +59,5 @@ public class ProfileClass {
     {
         return email;
     }
+    
 }

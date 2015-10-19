@@ -6,7 +6,7 @@
 
 package uk.ac.dundee.computing.aec.instagrim.models;
 
-import uk.ac.dundee.computing.aec.instagrim.stores.ProfileClass;
+
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.PreparedStatement;
@@ -23,6 +23,7 @@ import java.util.UUID;
 import uk.ac.dundee.computing.aec.instagrim.lib.AeSimpleSHA1;
 import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
+import uk.ac.dundee.computing.aec.instagrim.stores.Profile;
 
 /**
  *
@@ -89,7 +90,7 @@ public class User {
                         .where(eq("userID", newID));
             session.execute(s04);  
                   Statement s05 = QueryBuilder.update("instagrim","userprofiles")
-                          .with(set("address",newAdd))
+                          .with(set("addresses",newAdd))
                           .where(eq("userID",newID));
             session.execute(s05);
                 
@@ -97,59 +98,10 @@ public class User {
         }
         
         return true;
-        /*
-        System.out.println(newUsername);
-        System.out.println(username);
-        ResultSet rs = null;
-        Session session = cluster.connect("instagrim");
-        PreparedStatement ps = session.prepare("Select * from userprofiles");
-        BoundStatement boundStatement = new BoundStatement(ps);
-        rs = session.execute( // this is where the query is executed
-                boundStatement // here you are binding the 'boundStatement'
-                        );
         
-        for (Row row : rs) {
-               
-                String userName = row.getString("login");
-                if(userName.equals(username))
-                {
-                    
-                    UUID userID = row.getUUID("userid");
-        Statement statement;
-        statement = QueryBuilder.update("instagrim", "userprofiles")
-                .with(set("first_name", username))
-                .where(eq("userid", userID));
-                 session.execute(statement);
-                 return true;
-                }
-        
-        /*
-        BoundStatement boundStatement = new BoundStatement(ps);
-        rs = session.execute( // this is where the query is executed
-                boundStatement // here you are binding the 'boundStatement'
-                        );
-        for (Row row : rs) {
-               
-                String userName = row.getString("login");
-                if(userName.equals(username))
-                {
-                    
-                    UUID userID = row.getUUID("userid");
-                    boundStatement = new BoundStatement(ps01);
-                    session.execute(boundStatement.bind(newUsername, userID));
-                    return true;
-                }
-                               
-            
-        }
-        return false;
-                */
-        
-    
-    
     }
         
-    public Boolean getProfile(User user, ProfileClass p)
+    public Boolean getProfile(User user, Profile p)
     {
         Session session = cluster.connect("instagrim");
         Statement statement;
@@ -160,10 +112,10 @@ public class User {
 
         for (Row row : rs) {
 
-
             p.setFName(row.getString("first_name"));
-            p.setSName(row.getString("last_name"));
+            p.setLName(row.getString("last_name"));
             p.setEmail(row.getString("email"));
+            p.setAddress(row.getString("addresses"));
 
         }
         return true;

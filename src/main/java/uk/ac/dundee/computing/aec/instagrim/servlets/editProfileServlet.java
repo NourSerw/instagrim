@@ -26,7 +26,7 @@ import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
  *
  * @author NSERW
  */
-@WebServlet(name = "Update", urlPatterns = {"/Update"})
+@WebServlet(name = "editProfile", urlPatterns = {"/editProfile"})
 public class editProfileServlet extends HttpServlet {
     private Cluster cluster;
     Cluster cluster00 =null;
