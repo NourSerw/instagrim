@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -81,34 +82,30 @@ public class editProfileServlet extends HttpServlet {
         lg = (LoggedIn) session.getAttribute("LoggedIn");
         String username = lg.getUsername();
         String newUsername = request.getParameter("newUsername");
-        //String newAddress = request.getParameter("newAddress");
-        //String newFirstName = request.getParameter("newFName");
-        //String newLastName = request.getParameter("newLname");
-        //String newEmail = request.getParameter("newEmail");
+        String newAddress = request.getParameter("newAddress");
+        String newFirstName = request.getParameter("newFName");
+        String newLastName = request.getParameter("newLname");
+        String newEmail = request.getParameter("newEmail");
         User us = new User();
         us.setCluster(cluster);
         
-        
-        /*
         Pattern p0 = Pattern.compile(".+@.+\\.[a-z]+");
         Matcher m0 = p0.matcher(newEmail);
         boolean emailVerify = m0.matches();
-        */
         
-        if(!newUsername.isEmpty())
-        {
-            us.setCluster(cluster);
-            if(us.updateUN(newUsername,username))
-            {
-            
-            response.sendRedirect("/Instagrim");
-        }
-            else 
-            {
-                response.sendRedirect("/editProfile.jsp");
-            }
-        }
-       
+       boolean update = us.updateProfile(newUsername, username, newFirstName, newLastName, newAddress, newEmail);
+       if(emailVerify == true && update == true)
+       {
+           RequestDispatcher rd = request.getRequestDispatcher("editProfile.jsp");
+            rd.forward(request, response);
+       }
+       else 
+       {
+           String errorMessage1 = "Email is not valid!";
+            request.setAttribute("errorMessage1", errorMessage1);
+            request.getRequestDispatcher("/editProfile.jsp").forward(request, response);
+            response.sendRedirect("/Instagrim/editProfile.jsp");
+       }
     }
 
     /**

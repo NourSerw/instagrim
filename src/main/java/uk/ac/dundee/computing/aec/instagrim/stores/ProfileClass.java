@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package uk.ac.dundee.computing.aec.instagrim.models;
+package uk.ac.dundee.computing.aec.instagrim.stores;
 
 /**
  *
@@ -13,6 +13,7 @@ public class ProfileClass {
     
     String fName = null;
     String sName = null;
+    String address = null;
     String email = null;
     
     public void setFName(String fName01)
@@ -33,6 +34,16 @@ public class ProfileClass {
     public String getSName()
     {
         return sName;
+    }
+    
+    public void setAddress(String address01)
+    {
+        this.address = address01;
+    }
+    
+    public String getAddress()
+    {
+        return address;
     }
     
     public void setEmail(String email01)

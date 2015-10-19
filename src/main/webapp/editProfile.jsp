@@ -4,6 +4,7 @@
     Author     : NSERW
 --%>
 
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -16,13 +17,14 @@
         <h1>You can edit your profile here!</h1>
         <p> Your profile name is: ${message}</p>
         
+        <% ProfileClass pc = (ProfileClass)session.getAttribute("ProfileClass");  %>
         <form method="POST"  action="Update">
         <ul>
-            <li>User Name <input type="text" name="newUsername"></li>
+            <li>User Name <input type="text" name="newUsername" ></li>
             <li>Address <input type="=text" name="newAddress"</li>
-            <li>First Name <input type="text" name="newFName"</li>
-            <li>Last Name <input type="text" name="newLname"</li>
-            <li>E-mail <input type="text" name="newEmail"</li>
+            <li>First Name <input type="text" name="newFName" value="<%=pc.getFName()%>"</li>
+            <li>Last Name <input type="text" name="newLname" value="<%=pc.setSName()%>"</li>
+            <li>E-mail <input type="text" name="newEmail" value="<%=pc.getEmail()%>"</li>
             <br>
             <input type="submit" value="Edit">
         </ul>

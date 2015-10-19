@@ -6,6 +6,7 @@
 
 package uk.ac.dundee.computing.aec.instagrim.models;
 
+import uk.ac.dundee.computing.aec.instagrim.stores.ProfileClass;
 import com.datastax.driver.core.BoundStatement;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.PreparedStatement;
@@ -54,7 +55,8 @@ public class User {
         return true;
     }
     
-    public boolean updateUN(String newUsername, String oldUN)
+    public boolean updateProfile(String newUsername, String oldUN, String newFName,
+                            String newLName, String newAdd, String nEmail)
     {
         
         UUID newID = null;
@@ -67,13 +69,30 @@ public class User {
         for(Row row : rs)
         {
             String dbUN = row.getString("login");
-            newID = row.getUUID("userid");
+            newID = row.getUUID("userID");
             if(dbUN.equals(oldUN))   
             {
             Statement s01 = QueryBuilder.update("instagrim","userprofiles")
                         .with(set("login", newUsername))
-                        .where(eq("userid",newID));
+                        .where(eq("userID",newID));
             session.execute(s01);
+            Statement s02 = QueryBuilder.update("instagrim", "userprofiles")
+                        .with(set("first_name", newFName))
+                        .where(eq("userID", newID));
+            session.execute(s02);
+                Statement s03 = QueryBuilder.update("instagrim", "userprofiles")
+                        .with(set("last_name", newLName))
+                        .where(eq("userID", newID));
+            session.execute(s03);    
+                 Statement s04 = QueryBuilder.update("instagrim", "userprofiles")
+                        .with(set("email", nEmail))
+                        .where(eq("userID", newID));
+            session.execute(s04);  
+                  Statement s05 = QueryBuilder.update("instagrim","userprofiles")
+                          .with(set("address",newAdd))
+                          .where(eq("userID",newID));
+            session.execute(s05);
+                
             }
         }
         
@@ -130,7 +149,25 @@ public class User {
     
     }
         
-    
+    public Boolean getProfile(User user, ProfileClass p)
+    {
+        Session session = cluster.connect("instagrim");
+        Statement statement;
+        statement = QueryBuilder.select()
+                .all()
+                .from("instagrim", "userprofiles");
+        ResultSet rs = session.execute(statement);
+
+        for (Row row : rs) {
+
+
+            p.setFName(row.getString("first_name"));
+            p.setSName(row.getString("last_name"));
+            p.setEmail(row.getString("email"));
+
+        }
+        return true;
+    }
     
     
     public boolean IsValidUser(String username, String Password){
