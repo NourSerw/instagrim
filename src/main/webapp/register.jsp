@@ -37,11 +37,17 @@
                     <li>First Name <input type="text" name="fName"</li>
                     <li>Last Name <input type="text" name="lName"</li>
                     <li>E-mail <input type="text" name="email"</li>
-                    
+                    <%--
+                    <form method="Post" action="uploadProfilePic">
+                        <li> Profile Picture <input type="file" name="profilePic"</li> 
+                    </form>
+                    --%>
                 </ul>
                 <br/>
                 <input type="submit" value="Register"> 
             </form>
+                    
+                    
 
         </article>
         <footer>

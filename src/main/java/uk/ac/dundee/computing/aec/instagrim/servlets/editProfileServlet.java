@@ -28,8 +28,7 @@ import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
  */
 @WebServlet(name = "editProfile", urlPatterns = {"/editProfile"})
 public class editProfileServlet extends HttpServlet {
-    private Cluster cluster;
-    Cluster cluster00 =null;
+    Cluster cluster = null;
 
 
     public void init(ServletConfig config) throws ServletException {

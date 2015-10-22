@@ -15,15 +15,18 @@ import java.nio.ByteBuffer;
 public class Pic {
 
     private ByteBuffer bImage = null;
+    private ByteBuffer pfImage = null;
     private int length;
     private String type;
     private java.util.UUID UUID=null;
+    private java.util.UUID profileUUID = null;
+    
     
     public void Pic() {
 
     }
     public void setUUID(java.util.UUID UUID){
-        this.UUID =UUID;
+        this.UUID = UUID;
     }
     public String getSUUID(){
         return UUID.toString();

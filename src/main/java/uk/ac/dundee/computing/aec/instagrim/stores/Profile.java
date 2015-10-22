@@ -5,12 +5,15 @@
  */
 package uk.ac.dundee.computing.aec.instagrim.stores;
 
+import java.util.UUID;
+
 /**
  *
  * @author NSERW
  */
 public class Profile {
     
+    java.util.UUID userUUID = null;
     String fName = null;
     String lName = null;
     String address = null;
@@ -18,6 +21,16 @@ public class Profile {
     
     public Profile()
     {
+    }
+    
+    public UUID getUUID()
+    {
+        return userUUID;
+    }
+    
+    public void setUUID(UUID userID)
+    {
+        this.userUUID = userID;
     }
     
     public void setFName(String fName01)

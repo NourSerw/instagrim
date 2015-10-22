@@ -18,11 +18,12 @@
         <link rel="stylesheet" type="text/css" href="Styles.css" />
     </head>
     <body>
-        <h1>You can edit your profile here!</h1>
+        <p>You can edit your profile here!</p>
     
         
-        <%   Profile pc = (Profile)session.getAttribute("Profile"); 
+        <%   
              LoggedIn lg = (LoggedIn)session.getAttribute("LoggedIn");
+             Profile pc = (Profile)session.getAttribute("Profile"); 
              User user = new User();
              if(lg!=null){
              String UserName = lg.getUsername();
@@ -50,5 +51,10 @@
              }else {
             }
             %>
+            <footer>
+            <ul>
+                <li class="footer"><a href="/Instagrim">Home</a></li>
+            </ul>
+        </footer>
     </body>
 </html>

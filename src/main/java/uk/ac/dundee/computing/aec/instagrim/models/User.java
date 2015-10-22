@@ -17,9 +17,15 @@ import com.datastax.driver.core.Statement;
 import com.datastax.driver.core.querybuilder.QueryBuilder;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
 import static com.datastax.driver.core.querybuilder.QueryBuilder.set;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Blob;
 import java.util.UUID;
+import javax.naming.spi.DirStateFactory.Result;
 import uk.ac.dundee.computing.aec.instagrim.lib.AeSimpleSHA1;
 import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
@@ -100,8 +106,26 @@ public class User {
         return true;
         
     }
+    
+    public String getProfilePic(UUID userID)
+    {
+        String userID01 = null;
+        Session sn01 = cluster.connect("instagrim");
+        Statement st01 = QueryBuilder
+                            .select()
+                            .all()
+                            .from("instagrim", "userprofiles")
+                            .where(eq("userID",userID));
+        ResultSet  set = sn01.execute(st01);
+        for (Row row : set)
+                {
+                    userID01 = row.getString("profImg");
+                }
+        return userID01;
+    }
+    
         
-    public Boolean getProfile(User user, Profile p)
+    public void getProfile(User user, Profile p)
     {
         Session session = cluster.connect("instagrim");
         Statement statement;
@@ -116,9 +140,9 @@ public class User {
             p.setLName(row.getString("last_name"));
             p.setEmail(row.getString("email"));
             p.setAddress(row.getString("addresses"));
+            p.setUUID(row.getUUID("userID"));
 
         }
-        return true;
     }
     
     

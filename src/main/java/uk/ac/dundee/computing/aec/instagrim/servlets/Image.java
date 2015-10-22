@@ -1,6 +1,11 @@
 package uk.ac.dundee.computing.aec.instagrim.servlets;
 
 import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.Statement;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.set;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -8,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.UUID;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -27,6 +33,7 @@ import uk.ac.dundee.computing.aec.instagrim.lib.Convertors;
 import uk.ac.dundee.computing.aec.instagrim.models.PicModel;
 import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
+import uk.ac.dundee.computing.aec.instagrim.stores.Profile;
 
 /**
  * Servlet implementation class Image
@@ -36,7 +43,8 @@ import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
     "/Image/*",
     "/Thumb/*",
     "/Images",
-    "/Images/*"
+    "/Images/*",
+    "/updateProfilePic/"
 })
 @MultipartConfig
 
@@ -57,6 +65,7 @@ public class Image extends HttpServlet {
         CommandsMap.put("Image", 1);
         CommandsMap.put("Images", 2);
         CommandsMap.put("Thumb", 3);
+        CommandsMap.put("updateProfilePic", 4);
 
     }
 
@@ -89,6 +98,9 @@ public class Image extends HttpServlet {
             case 3:
                 DisplayImage(Convertors.DISPLAY_THUMB,args[2],  response);
                 break;
+            case 4: 
+                updateProfileFunction(args[2],response,request);
+                break;
             default:
                 error("Bad Operator", response);
         }
@@ -103,8 +115,23 @@ public class Image extends HttpServlet {
         rd.forward(request, response);
 
     }
+    
+    public void updateProfileFunction(String picID, HttpServletResponse response, HttpServletRequest request)
+    {
+        UUID newUserID = null;
+        PicModel pm = new PicModel();
+        pm.setCluster(cluster);
+        HttpSession s = request.getSession();
+        LoggedIn lg = (LoggedIn) s.getAttribute("LoggedIn");
+        Profile p = new Profile();
+        newUserID = p.getUUID();
+        pm.updatePP(picID, newUserID);
+    }
+    
 
-    private void DisplayImage(int type,String Image, HttpServletResponse response) throws ServletException, IOException {
+
+    private void DisplayImage (int type,String Image, HttpServletResponse response) throws ServletException, IOException 
+    {
         PicModel tm = new PicModel();
         tm.setCluster(cluster);
   

@@ -49,6 +49,7 @@ public final class Keyspaces {
                     + "      email text,\n"
                     + "      addresses text,\n"
                     + "      userID uuid,\n"
+                    + "      profImg text,\n"
                     +"       PRIMARY KEY(userID)"
                     + " );";
             String usersHistory = "CREATE TABLE if not exists instagrim.userHistory (\n"

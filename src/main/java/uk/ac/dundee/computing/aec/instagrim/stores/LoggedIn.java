@@ -13,8 +13,19 @@ package uk.ac.dundee.computing.aec.instagrim.stores;
 public class LoggedIn {
     boolean logedin=false;
     String Username=null;
+    String ppID = null;
     public void LogedIn(){
         
+    }
+    
+    public String getProfPic()
+    {
+        return ppID;
+    }
+    
+    public void setProfPic(String profileString)
+    {
+        this.ppID = profileString;
     }
     
     public void setUsername(String name){

@@ -18,6 +18,10 @@ import com.datastax.driver.core.PreparedStatement;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.datastax.driver.core.Session;
+import com.datastax.driver.core.Statement;
+import com.datastax.driver.core.querybuilder.QueryBuilder;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.eq;
+import static com.datastax.driver.core.querybuilder.QueryBuilder.set;
 import com.datastax.driver.core.utils.Bytes;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -30,6 +34,7 @@ import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.UUID;
 import javax.imageio.ImageIO;
 import static org.imgscalr.Scalr.*;
 import org.imgscalr.Scalr.Method;
@@ -85,6 +90,15 @@ public class PicModel {
         } catch (IOException ex) {
             System.out.println("Error --> " + ex);
         }
+    }
+    
+    public void updatePP(String profID, UUID userID)
+    {
+        Session s = cluster.connect("instagrim");
+        Statement s01 = QueryBuilder.update("instagrim","userprofiles")
+                        .with(set("profImg",profID))
+                        .where(eq("userID",userID));
+        s.execute(s01); 
     }
 
     public byte[] picresize(String picid,String type) {
