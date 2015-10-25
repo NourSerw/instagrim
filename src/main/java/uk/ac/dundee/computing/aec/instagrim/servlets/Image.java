@@ -44,7 +44,9 @@ import uk.ac.dundee.computing.aec.instagrim.stores.Profile;
     "/Thumb/*",
     "/Images",
     "/Images/*",
-    "/updateProfilePic/"
+    "/updateProfilePic/",
+     "/updateProfilePic",
+    "/updateProfilePic/*"
 })
 @MultipartConfig
 
@@ -84,6 +86,9 @@ public class Image extends HttpServlet {
         int command;
         try {
             command = (Integer) CommandsMap.get(args[1]);
+            System.out.println(args);
+            System.out.println("Command = " + command);
+            System.out.println("args[2] = " + args[2]);
         } catch (Exception et) {
             error("Bad Operator", response);
             return;
@@ -99,7 +104,7 @@ public class Image extends HttpServlet {
                 DisplayImage(Convertors.DISPLAY_THUMB,args[2],  response);
                 break;
             case 4: 
-                updateProfileFunction(args[2],response,request);
+                updateProfileFunction(args[2], response, request);
                 break;
             default:
                 error("Bad Operator", response);
@@ -113,18 +118,17 @@ public class Image extends HttpServlet {
         RequestDispatcher rd = request.getRequestDispatcher("/UsersPics.jsp");
         request.setAttribute("Pics", lsPics);
         rd.forward(request, response);
-
     }
     
     public void updateProfileFunction(String picID, HttpServletResponse response, HttpServletRequest request)
     {
-        UUID newUserID = null;
+        
+        String newUserID = null;
         PicModel pm = new PicModel();
         pm.setCluster(cluster);
         HttpSession s = request.getSession();
         LoggedIn lg = (LoggedIn) s.getAttribute("LoggedIn");
-        Profile p = new Profile();
-        newUserID = p.getUUID();
+        newUserID =  lg.getUsername();
         pm.updatePP(picID, newUserID);
     }
     

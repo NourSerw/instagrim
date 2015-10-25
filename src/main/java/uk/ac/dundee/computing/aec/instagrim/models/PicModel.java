@@ -36,10 +36,13 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.UUID;
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import static org.imgscalr.Scalr.*;
 import org.imgscalr.Scalr.Method;
 
 import uk.ac.dundee.computing.aec.instagrim.lib.*;
+import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
 //import uk.ac.dundee.computing.aec.stores.TweetStore;
 
@@ -53,6 +56,74 @@ public class PicModel {
 
     public void setCluster(Cluster cluster) {
         this.cluster = cluster;
+    }
+    
+    public void insertIDUP(byte[] b, String type, String name, String user, HttpServletRequest request)
+    {
+        HttpSession httpS=request.getSession();
+        LoggedIn lg= (LoggedIn)httpS.getAttribute("LoggedIn");
+        String userID = lg.getUUID();
+        UUID userID01 = UUID.fromString(userID);
+        try {
+            Convertors convertor = new Convertors();
+
+            String types[]=Convertors.SplitFiletype(type);
+            ByteBuffer buffer = ByteBuffer.wrap(b);
+            int length = b.length;
+            java.util.UUID picid = convertor.getTimeUUID();
+            
+            //The following is a quick and dirty way of doing this, will fill the disk quickly !
+            Boolean success = (new File("/var/tmp/instagrim/")).mkdirs();
+            FileOutputStream output = new FileOutputStream(new File("/var/tmp/instagrim/" + picid));
+
+            output.write(b);
+            byte []  thumbb = picresize(picid.toString(),types[1]);
+            int thumblength= thumbb.length;
+            ByteBuffer thumbbuf=ByteBuffer.wrap(thumbb);
+            byte[] processedb = picdecolour(picid.toString(),types[1]);
+            ByteBuffer processedbuf=ByteBuffer.wrap(processedb);
+            int processedlength=processedb.length;
+            Session session = cluster.connect("instagrim");
+
+            Statement st = QueryBuilder.update("instagrim,userprofiles")
+                                        .with(set("profImg",picid))
+                                        .where(eq("userID",userID01));
+            PreparedStatement psInsertPic = session.prepare("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)");
+            PreparedStatement psInsertPicToUser = session.prepare("insert into userpiclist ( picid, user, pic_added) values(?,?,?)");
+            BoundStatement bsInsertPic = new BoundStatement(psInsertPic);
+            BoundStatement bsInsertPicToUser = new BoundStatement(psInsertPicToUser);
+
+            Date DateAdded = new Date();
+            session.execute(bsInsertPic.bind(picid, buffer, thumbbuf,processedbuf, user, DateAdded, length,thumblength,processedlength, type, name));
+            session.execute(bsInsertPicToUser.bind(picid, user, DateAdded));
+            session.execute(st);
+            session.close();
+
+        } catch (IOException ex) {
+            System.out.println("Error --> " + ex);
+        }
+    }
+    
+    public void updatePP(String profID, String userName)
+    {   
+        Session s = cluster.connect("instagrim");
+        UUID userID = null;
+         Statement s01 = QueryBuilder.select()
+                                        .all()
+                                        .from("instagrim","userprofiles");
+         ResultSet r = s.execute(s01);
+         for(Row row : r)
+         {
+             String uN = row.getString("login");
+             userID = row.getUUID("userID");
+             if(uN.equals(userName))
+             {
+                 Statement s02 = QueryBuilder.update("instagrim", "userprofiles")
+                                            .with(set("profImg",profID))
+                                            .where(eq("userID",userID));
+                 s.execute(s02);
+             }
+         }
     }
 
     public void insertPic(byte[] b, String type, String name, String user) {
@@ -92,14 +163,7 @@ public class PicModel {
         }
     }
     
-    public void updatePP(String profID, UUID userID)
-    {
-        Session s = cluster.connect("instagrim");
-        Statement s01 = QueryBuilder.update("instagrim","userprofiles")
-                        .with(set("profImg",profID))
-                        .where(eq("userID",userID));
-        s.execute(s01); 
-    }
+    
 
     public byte[] picresize(String picid,String type) {
         try {

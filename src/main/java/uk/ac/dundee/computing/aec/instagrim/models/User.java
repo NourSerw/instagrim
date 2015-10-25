@@ -107,42 +107,72 @@ public class User {
         
     }
     
-    public String getProfilePic(UUID userID)
+    public void retrievePP()
+    {
+        LoggedIn loggedIN = new LoggedIn();
+        loggedIN.setProfPic(getProfilePic( loggedIN.getUUID()));
+
+    }
+    
+    public String getProfilePic(String picID)
     {
         String userID01 = null;
         Session sn01 = cluster.connect("instagrim");
-        Statement st01 = QueryBuilder
-                            .select()
-                            .all()
-                            .from("instagrim", "userprofiles")
-                            .where(eq("userID",userID));
-        ResultSet  set = sn01.execute(st01);
-        for (Row row : set)
+        PreparedStatement ps = sn01.prepare("select profImg from userprofiles where login =?");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = sn01.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        picID));
+        if (rs.isExhausted()) {
+            System.out.println("No Images returned");
+            return "No Profile Picture Found";
+        } else {
+        for (Row row : rs)
                 {
                     userID01 = row.getString("profImg");
                 }
         return userID01;
     }
+    }
     
-        
-    public void getProfile(User user, Profile p)
+    
+    /*public UUID getUserUI()
     {
+        UUID userID = null;
         Session session = cluster.connect("instagrim");
         Statement statement;
-        statement = QueryBuilder.select()
-                .all()
-                .from("instagrim", "userprofiles");
-        ResultSet rs = session.execute(statement);
-
+        
+        return userID;
+    }
+    */
+        
+    public UUID getProfile(User us, Profile p, String username)
+    {
+        Session session = cluster.connect("instagrim");
+        PreparedStatement ps = session.prepare("select * from userprofiles where login=?");
+        ResultSet rs = null;
+        BoundStatement boundStatement = new BoundStatement(ps);
+        rs = session.execute( // this is where the query is executed
+                boundStatement.bind( // here you are binding the 'boundStatement'
+                        username ));
+    
+        UUID userID = null;
         for (Row row : rs) {
-
+            
+            
             p.setFName(row.getString("first_name"));
             p.setLName(row.getString("last_name"));
             p.setEmail(row.getString("email"));
             p.setAddress(row.getString("addresses"));
-            p.setUUID(row.getUUID("userID"));
+            //LoggedIn lg = new LoggedIn();
+            //LoggedIn lg = (LoggedIn) 
+            //lg.setUUID(row.getUUID("userID"));
+            userID = row.getUUID("userID");
+    
 
         }
+        return userID;
     }
     
     

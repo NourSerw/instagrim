@@ -58,13 +58,14 @@ public class Login extends HttpServlet {
         boolean isValid=us.IsValidUser(username, password);
         HttpSession session=request.getSession();
         System.out.println("Session in servlet "+session);
+        
         if (isValid){
             LoggedIn lg= new LoggedIn();
             Profile p = new Profile();
             lg.setLogedin();
             lg.setUsername(username);
-            us.getProfile(us, p);
-            
+            lg.setUUID(us.getProfile(us, p, username));
+            lg.setProfPic(us.getProfilePic(lg.getUsername()));
             session.setAttribute("LoggedIn", lg);
             session.setAttribute("Profile", p);
             System.out.println("Session in servlet "+session);
@@ -72,7 +73,7 @@ public class Login extends HttpServlet {
 	    rd.forward(request,response);
             
             
-            
+        
         }else{
             response.sendRedirect("/Instagrim/login.jsp");
         }

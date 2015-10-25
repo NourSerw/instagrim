@@ -6,6 +6,8 @@
 
 package uk.ac.dundee.computing.aec.instagrim.stores;
 
+import java.util.UUID;
+
 /**
  *
  * @author Administrator
@@ -14,8 +16,21 @@ public class LoggedIn {
     boolean logedin=false;
     String Username=null;
     String ppID = null;
+    java.util.UUID userID = null;
+    
     public void LogedIn(){
         
+    }
+    
+    
+    public String getUUID()
+    {
+        return userID.toString();
+    }
+    
+    public void setUUID(UUID userID)
+    {
+        this.userID = userID;
     }
     
     public String getProfPic()
@@ -23,9 +38,9 @@ public class LoggedIn {
         return ppID;
     }
     
-    public void setProfPic(String profileString)
+    public void setProfPic(String ppID)
     {
-        this.ppID = profileString;
+        this.ppID = ppID;
     }
     
     public void setUsername(String name){

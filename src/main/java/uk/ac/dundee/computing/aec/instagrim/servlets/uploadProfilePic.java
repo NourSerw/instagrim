@@ -5,21 +5,31 @@
  */
 package uk.ac.dundee.computing.aec.instagrim.servlets;
 
+import com.datastax.driver.core.Cluster;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
+import uk.ac.dundee.computing.aec.instagrim.lib.CassandraHosts;
+import uk.ac.dundee.computing.aec.instagrim.models.PicModel;
+import uk.ac.dundee.computing.aec.instagrim.models.User;
+import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 
 /**
  *
  * @author NSERW
  */
-@WebServlet(name = "uploadProfilePic", urlPatterns = {"/uploadProfilePic"})
+@WebServlet(name = "uploadProfilePic", urlPatterns = {"/uploadProfilePic", "/UserProfile"})
 public class uploadProfilePic extends HttpServlet {
 
+    private Cluster cluster;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -45,6 +55,11 @@ public class uploadProfilePic extends HttpServlet {
             out.println("</html>");
         }
     }
+    
+    public void init(ServletConfig config) throws ServletException {
+        // TODO Auto-generated method stub
+        cluster = CassandraHosts.getCluster();
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -58,7 +73,7 @@ public class uploadProfilePic extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
     }
 
     /**
@@ -72,7 +87,32 @@ public class uploadProfilePic extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        for (Part part : request.getParts()) {
+            System.out.println("Part Name " + part.getName());
+
+            String type = part.getContentType();
+            String filename = part.getSubmittedFileName();
+            
+            InputStream is = request.getPart(part.getName()).getInputStream();
+            int i = is.available();
+            HttpSession session=request.getSession();
+            LoggedIn lg= (LoggedIn)session.getAttribute("LoggedIn");
+            String username="majed";
+            if (lg.getlogedin()){
+                username=lg.getUsername();
+            }
+            if (i > 0) {
+                byte[] b = new byte[i + 1];
+                is.read(b);
+                System.out.println("Length : " + b.length);
+                PicModel tm = new PicModel();
+                tm.setCluster(cluster);
+                tm.insertIDUP(b, type, filename, username, request);
+
+                is.close();
+            }
         
+        }
     }
 
     /**

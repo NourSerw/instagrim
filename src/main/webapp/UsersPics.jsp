@@ -33,51 +33,92 @@
         </header>
         <%
             LoggedIn loggedIN = (LoggedIn) session.getAttribute("LoggedIn"); 
-            Profile p = (Profile) session.getAttribute("Profile");
-            UUID userID = p.getUUID();
-            String userName = loggedIN.getUsername(); 
-            PicModel pm01 = new PicModel();
-            Cluster c;
-            User u = new User();
-            c = CassandraHosts.getCluster();
-            pm01.setCluster(c);
-            loggedIN.setProfPic(u.getProfilePic(userID));
+            //Profile pf = (Profile) session.getAttribute("Profile");
+            String uN = loggedIN.getUsername();
+            PicModel pm = new PicModel();
+            Cluster cluster;
+            User us = new User();
+            cluster = CassandraHosts.getCluster();
+            pm.setCluster(cluster);
+            us.setCluster(cluster);
+            loggedIN.setProfPic(us.getProfilePic(loggedIN.getUsername()));
+            String pp = loggedIN.getProfPic();
             
         %>
         <nav>
+            
             <ul>
                 <li class="nav"><a href="/Instagrim/upload.jsp">Upload</a></li>
                 <li class="nav"><a href="/Instagrim/Images/majed">Sample Images</a></li>
                 <li class="nav"><a href="/Instagrim/editProfile.jsp">Edit profile</a></li>
+                <li class="nav"><a href="/Instagrim/profilePage.jsp">Your Profile</a></li>
             </ul>
         </nav>
  
         <article>
-            <h1>Your Profile Picture</h1>
-            <
-            <%
-                
-            %>
             
-            <h2>Your Pics</h2>
+            
+           
+            
+            
         <%
+            Pic p = null;
+            Pic profilePic = null;
+   
             java.util.LinkedList<Pic> lsPics = (java.util.LinkedList<Pic>) request.getAttribute("Pics");
+             
+             for(int i= 0; i<lsPics.size();i++)
+            {
+                p = lsPics.get(i);
+                if(p.getSUUID().equals(pp))
+                {
+                    profilePic = p;
+                }
+            }
+                %>
+            <h1>Your Profile Picture</h1>  
+            
+            <%
+             if(profilePic!=null)
+                {
+            %> 
+            
+            <a href="/Instagrim/Image/<%=profilePic.getSUUID()%>" ><img src="/Instagrim/Thumb/<%=profilePic.getSUUID()%>"></a><br/>
+            <%
+                }
+             %>
+            <form action="/Instagrim/uploadProfilePic" enctype="multipart/form-data" method="POST">
+            <input type="file" name="Update">
+            <input type="submit" value="Press">        
+        </form>
+            
+            
+             <h2>Your Pics</h2>
+             <%
             if (lsPics == null) {
         %>
         <p>No Pictures found</p>
+        
         <%
         } else {
-            Iterator<Pic> iterator;
-            iterator = lsPics.iterator();
-            while (iterator.hasNext()) {
-                Pic p = (Pic) iterator.next();
-
+                
+            //iterator = lsPics.iterator();
+            for(int i= 0; i<lsPics.size();i++)
+            {
+                p = lsPics.get(i);
+               
+                %>
+                <a href="/Instagrim/Image/<%=p.getSUUID()%>" ><img src="/Instagrim/Thumb/<%=p.getSUUID()%>"></a><br/>
+            <%
+                }   
         %>
-        <a href="/Instagrim/Image/<%=p.getSUUID()%>" ><img src="/Instagrim/Thumb/<%=p.getSUUID()%>"></a><br/><%
+       
+            <%
 
             }
-            }
+            
         %>
+        
         </article>
         <footer>
             <ul>
