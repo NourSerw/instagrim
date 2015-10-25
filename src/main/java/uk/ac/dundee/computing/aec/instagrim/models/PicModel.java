@@ -85,8 +85,9 @@ public class PicModel {
             int processedlength=processedb.length;
             Session session = cluster.connect("instagrim");
 
-            Statement st = QueryBuilder.update("instagrim,userprofiles")
-                                        .with(set("profImg",picid))
+            String picId01 = picid.toString();
+            Statement st = QueryBuilder.update("instagrim","userprofiles")
+                                        .with(set("profImg",picId01))
                                         .where(eq("userID",userID01));
             PreparedStatement psInsertPic = session.prepare("insert into pics ( picid, image,thumb,processed, user, interaction_time,imagelength,thumblength,processedlength,type,name) values(?,?,?,?,?,?,?,?,?,?,?)");
             PreparedStatement psInsertPicToUser = session.prepare("insert into userpiclist ( picid, user, pic_added) values(?,?,?)");

@@ -4,13 +4,21 @@
         <servlet-name>uploadProfilePic</servlet-name>
         <servlet-class>uk.ac.dundee.computing.aec.instagrim.servlets.uploadProfilePic</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>searchUsers</servlet-name>
+        <servlet-class>uk.ac.dundee.computing.aec.instagrim.servlets.searchUsers</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>uploadProfilePic</servlet-name>
         <url-pattern>/uploadProfilePic</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
-   <welcome-file>index.jsp</welcome-file>
-</welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+    <servlet-mapping>
+        <servlet-name>searchUsers</servlet-name>
+        <url-pattern>/searchUsers</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

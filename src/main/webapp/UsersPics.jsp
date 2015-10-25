@@ -67,6 +67,8 @@
    
             java.util.LinkedList<Pic> lsPics = (java.util.LinkedList<Pic>) request.getAttribute("Pics");
              
+            if(lsPics!=null)
+            {
              for(int i= 0; i<lsPics.size();i++)
             {
                 p = lsPics.get(i);
@@ -74,6 +76,7 @@
                 {
                     profilePic = p;
                 }
+            }
             }
                 %>
             <h1>Your Profile Picture</h1>  
