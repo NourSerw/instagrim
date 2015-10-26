@@ -26,6 +26,9 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.Blob;
 import java.util.UUID;
 import javax.naming.spi.DirStateFactory.Result;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import uk.ac.dundee.computing.aec.instagrim.lib.AeSimpleSHA1;
 import uk.ac.dundee.computing.aec.instagrim.stores.LoggedIn;
 import uk.ac.dundee.computing.aec.instagrim.stores.Pic;
@@ -60,6 +63,32 @@ public class User {
         //We are assuming this always works.  Also a transaction would be good here !
         
         return true;
+    }
+    
+    public boolean searchUser(String searchUN, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+    {
+        Session session = cluster.connect("instagrim");
+        Statement s00 = QueryBuilder.select()
+                                    .all()
+                                    .from("instagrim", "userprofiles");
+        ResultSet rs = session.execute(s00);
+        
+        for(Row row : rs)
+        {
+            String userName = row.getString("login");
+            
+        
+            if(searchUN.equals(userName))
+            {
+               return true;
+            }
+            else {
+             
+             return false;
+            }
+        }
+        return true;
+        
     }
     
     public boolean updateProfile(String newUsername, String oldUN, String newFName,

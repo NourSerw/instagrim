@@ -8,14 +8,17 @@ package uk.ac.dundee.computing.aec.instagrim.servlets;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import uk.ac.dundee.computing.aec.instagrim.models.User;
 
 /**
  *
  * @author NSERW
  */
+@WebServlet(name = "searchUsers", urlPatterns = {"/searchUsers"})
 public class searchUsers extends HttpServlet {
 
     /**
@@ -56,7 +59,23 @@ public class searchUsers extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        String searchUN = request.getParameter("searchUser");
+        User us = new User();
+        if(us.searchUser(searchUN, request, response) == true)
+        {
+       
+        request.getRequestDispatcher("/Image/" + searchUN).forward(request, response);
+        response.sendRedirect("/Image/" + searchUN);
+        }
+        else 
+        {
+        String message ="User does not exist!";
+        request.setAttribute("message", message);
+        request.getRequestDispatcher("/searchUsers.jsp").forward(request, response);
+        response.sendRedirect("/searchUsers.jsp");
+        }
+        
     }
 
     /**

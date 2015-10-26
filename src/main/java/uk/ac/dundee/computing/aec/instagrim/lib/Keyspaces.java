@@ -52,7 +52,7 @@ public final class Keyspaces {
                     + "      profImg text,\n"
                     +"       PRIMARY KEY(userID)"
                     + " );";
-            //String loginSecInd = "CREATE INDEX user_index ON instagrim.userprofiles (login);";         
+            String loginSecInd = "CREATE INDEX user_index ON instagrim.userprofiles (login);";         
             String usersHistory = "CREATE TABLE if not exists instagrim.userHistory (\n"
                     + "      relID text,\n"
                     + "      follower text,\n"
@@ -111,7 +111,7 @@ public final class Keyspaces {
             } catch (Exception et) {
                 System.out.println("Can't create Address Profile " + et);
             }
-            /*
+          
             try{
                 SimpleStatement cqlQuery = new SimpleStatement(loginSecInd);
                 session.execute(cqlQuery);
@@ -119,7 +119,7 @@ public final class Keyspaces {
             }catch(Exception et){
                  System.out.println("Can't create Address Profile " + et);
             }
-              */      
+                   
             session.close();
 
         } catch (Exception et) {
